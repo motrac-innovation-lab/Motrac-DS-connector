@@ -1,0 +1,12 @@
+{
+  "name": "motrac-bouwstenen",
+  "owner": { "name": "Motrac Innovation Lab" },
+  "description": "Bouwstenen voor Motrac-apps, met de instructies voor Claude Code om ze te integreren.",
+  "plugins": [
+    {
+      "name": "motrac-docusign",
+      "source": "./plugin",
+      "description": "DocuSign (e-signing) toevoegen aan een Motrac-app met @motrac/docusign, inclusief de stappen die een mens moet zetten."
+    }
+  ]
+}

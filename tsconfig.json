@@ -1,0 +1,23 @@
+{
+  // Alleen voor de .d.ts-bestanden in types/ (npm run types). De bron is
+  // gewone ESM-JavaScript met JSDoc, zodat npm bij een git-afhankelijkheid niets
+  // hoeft te bouwen; de types worden meegecommit en CI controleert dat ze bij
+  // de bron passen (npm run check:types).
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "types",
+    "rootDir": "src",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    "strict": true,
+    "noImplicitAny": false,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*.js"]
+}
