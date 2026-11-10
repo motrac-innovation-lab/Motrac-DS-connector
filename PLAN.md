@@ -80,8 +80,10 @@ de build" dus.
   `crypto.subtle`, `node:crypto`). npm hoeft bij installeren niets te bouwen, en
   zowel een TypeScript-app (Contractenbeheer) als een JS-app (Rental) kan het direct
   importeren.
-- **`git+https`, niet de `github:`-afkorting.** Met de afkorting zet npm een
-  `git+ssh://`-URL in de lockfile, en dan wil CI een SSH-sleutel.
+- **Lockfile.** npm schrijft een GitHub-afhankelijkheid weg als
+  `git+ssh://git@github.com/…#<sha>`, ook bij een `git+https`-URL. Getest: `npm ci`
+  haalt hem toch via https op, ook zonder SSH op de machine. Alleen https-toegang
+  is nodig (de `insteadOf`-regel hieronder).
 - **CI.** Het bestaande secret `FLEET_REPO_READ_TOKEN` krijgt ook leesrecht op deze
   repo (Mark), en vóór `npm ci` komt één stap:
   ```bash
@@ -202,7 +204,7 @@ Claude zet voor elke stap de tekst klaar; de gebruiker voert uit.
 | # | Wat | Wie | Wat Claude klaarzet |
 |---|---|---|---|
 | 1 | Leesrecht van `FLEET_REPO_READ_TOKEN` uitbreiden met deze repo (anders faalt `npm ci` in CI) | Mark | Mail aan Mark |
-| 2 | **Variabelen aanvragen** bij Mark Kuijpers (mark.kuijpers@motrac.nl): de zes `DOCUSIGN_*`, eerst voor demo (`account-d`) | gebruiker → Mark | Mail met appnaam, backend-URL, webhook-URL, omgeving (demo/productie) en de lijst verzenders. Met de afspraak dat geheimen niet per mail komen maar rechtstreeks in het Environment-paneel van de backend op `control.motrac.app` (of via de wachtwoordkluis) |
+| 2 | **Variabelen aanvragen** bij Mark Kuijpers (mark.kuijpers@motrac.nl): de zes `DOCUSIGN_*`, eerst voor demo (`account-d`) | gebruiker → Mark | Mail met appnaam, backend-URL, webhook-URL, omgeving (demo/productie) en de lijst verzenders. Mark stuurt de waarden als **onetimesecret-link**; de gebruiker zet ze direct in het Environment-paneel van de backend op `control.motrac.app`. Nooit per mail, chat of repo |
 | 3 | Variabelen zetten in het Environment-paneel van de backend | gebruiker of Mark | Lijst met namen; de sleutel als base64 op één regel (`openssl pkcs8 -topk8 -nocrypt -in sleutel.pem \| base64 -w0`) |
 | 4 | **Connect-configuratie** per app: Custom, URL `https://<backend>/<pad>/webhook`, JSON SIM, events Sent/Delivered/Completed/Declined/Voided, HMAC aan (sleutel is per account, dus dezelfde als de andere apps), Require Acknowledgment aan | DocuSign-beheerder (Mark) | Precies deze lijst, ingevuld met de URL |
 | 5 | **Verzenders klaarzetten**: elke verzender logt eenmalig in op DocuSign via SSO met het @motrac.nl-account, en krijgt profiel *Sender* (nieuwe SSO-gebruikers zijn *Viewer*; Sender-seats tellen voor de licentie) | verzender + DocuSign-beheerder | Instructie per verzender; de health-route toont per persoon de stand |
@@ -243,15 +245,26 @@ doorloopt, legt een echte (geanonimiseerde) body vast als testfixture in deze re
 Fase 4 en 5 zijn niet nodig voor nieuwe apps, maar zonder die stap blijven er drie
 kopieën. Rental eerst: die staat het dichtst bij de bouwsteen.
 
-## 8. Open punten voor Mark
+## 8. Besluiten (Mark, 2026-11-10)
 
-1. Akkoord op **git-afhankelijkheid met versietag** (§ 3) in plaats van het
-   sibling-patroon van template-ui?
-2. Mag `FLEET_REPO_READ_TOKEN` leesrecht op deze repo krijgen, of liever een apart
-   token?
-3. Hoe wil je de variabelen uitgeven: zelf in het Environment-paneel van elke nieuwe
-   app zetten, of via de wachtwoordkluis aan de bouwer?
-4. Eén Connect-configuratie per app (zoals nu) blijft de afspraak?
-5. Moet de bouwsteen ook de Claude Code-plugin leveren (`/plugin marketplace add
-   motrac-innovation-lab/Motrac-DS-connector`), of is `INTEGREREN.md` genoeg?
-6. Repo-naam: `Motrac-DS-connector` houden, met pakketnaam `@motrac/docusign`?
+1. **Git-afhankelijkheid op een versietag** (§ 3), niet het sibling-patroon van
+   template-ui.
+2. **`FLEET_REPO_READ_TOKEN`** krijgt leesrecht op deze repo; geen apart token.
+3. **Variabelen** gaan van Mark naar de bouwer via een **onetimesecret-link**; de
+   bouwer zet ze zelf in het Environment-paneel. Claude ziet ze nooit.
+4. **Eén Connect-configuratie per app**, voor nu.
+5. **Claude Code-plugin** naast `INTEGREREN.md`: marketplace `motrac-bouwstenen`,
+   plugin `motrac-docusign`, skill `docusign-integreren`.
+6. Repo-naam `Motrac-DS-connector`, pakketnaam `@motrac/docusign` (niet expliciet
+   besproken; zo gebouwd).
+
+## 9. Stand
+
+- **Fase 1 (kern) en fase 2 (instructies, voorbeelden, plugin): gebouwd** op branch
+  `claude/ecstatic-archimedes-3qj9uv`, nog niet getagd. 48 tests groen, types
+  gegenereerd, het Express- en het Hono-voorbeeld draaien tegen de nep-DocuSign,
+  `claude plugin validate` slaagt.
+- **Na de merge naar `main`**: tag `v1.0.0` zetten (zonder tag werkt de
+  installatieregel in de instructies niet).
+- **Nog niet tegen echte DocuSign getest**: dat gebeurt in fase 3, met de eerste app
+  op demo (`MENSELIJKE-STAPPEN.md` § 6).

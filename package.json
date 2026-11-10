@@ -1,0 +1,46 @@
+{
+  "name": "@motrac/docusign",
+  "version": "1.0.0",
+  "description": "DocuSign-bouwsteen voor Motrac-apps: envelop op naam van de gebruiker, webhook, health en testhulp.",
+  "private": true,
+  "type": "module",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  },
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./testing": {
+      "types": "./types/testing/index.d.ts",
+      "default": "./src/testing/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "types": "./types/index.d.ts",
+  "bin": {
+    "motrac-docusign-vendor": "./bin/vendor.mjs"
+  },
+  "files": [
+    "src",
+    "types",
+    "sql",
+    "bin",
+    "voorbeelden",
+    "INTEGREREN.md",
+    "MENSELIJKE-STAPPEN.md",
+    "CHANGELOG.md",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "types": "rm -rf types && tsc -p tsconfig.json",
+    "check:types": "npm run types && git diff --exit-code -- types"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "typescript": "5.9.3"
+  }
+}

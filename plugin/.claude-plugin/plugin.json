@@ -1,0 +1,6 @@
+{
+  "name": "motrac-docusign",
+  "description": "DocuSign (e-signing) toevoegen aan een Motrac-app met de bouwsteen @motrac/docusign (motrac-innovation-lab/Motrac-DS-connector).",
+  "version": "1.0.0",
+  "author": { "name": "Motrac Innovation Lab" }
+}
