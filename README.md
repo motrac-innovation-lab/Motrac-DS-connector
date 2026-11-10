@@ -38,8 +38,8 @@ inrichten, verzenders klaarzetten en testen. Zie
 npm install "git+https://github.com/motrac-innovation-lab/Motrac-DS-connector.git#v1.0.0"
 ```
 
-Altijd `git+https`, niet `github:` (dan komt er een SSH-URL in de lockfile). In CI
-vóór `npm ci`:
+De lockfile toont daarna een `git+ssh://…#<sha>`; dat is hoe npm GitHub-adressen
+wegschrijft, npm haalt toch via https op. In CI vóór `npm ci`:
 
 ```yaml
 - run: git config --global url."https://x-access-token:${{ secrets.FLEET_REPO_READ_TOKEN }}@github.com/motrac-innovation-lab/".insteadOf "https://github.com/motrac-innovation-lab/"

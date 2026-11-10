@@ -80,8 +80,10 @@ de build" dus.
   `crypto.subtle`, `node:crypto`). npm hoeft bij installeren niets te bouwen, en
   zowel een TypeScript-app (Contractenbeheer) als een JS-app (Rental) kan het direct
   importeren.
-- **`git+https`, niet de `github:`-afkorting.** Met de afkorting zet npm een
-  `git+ssh://`-URL in de lockfile, en dan wil CI een SSH-sleutel.
+- **Lockfile.** npm schrijft een GitHub-afhankelijkheid weg als
+  `git+ssh://git@github.com/…#<sha>`, ook bij een `git+https`-URL. Getest: `npm ci`
+  haalt hem toch via https op, ook zonder SSH op de machine. Alleen https-toegang
+  is nodig (de `insteadOf`-regel hieronder).
 - **CI.** Het bestaande secret `FLEET_REPO_READ_TOKEN` krijgt ook leesrecht op deze
   repo (Mark), en vóór `npm ci` komt één stap:
   ```bash

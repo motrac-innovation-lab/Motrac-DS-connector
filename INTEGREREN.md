@@ -66,14 +66,17 @@ Stel deze vragen in één bericht, met je voorstel erbij:
 
 Gebruik de nieuwste tag uit `CHANGELOG.md` (nu `v1.0.0`).
 
-**Altijd `git+https`, nooit `github:`** (anders zet npm een SSH-URL in de lockfile):
+Schrijf de volledige `git+https`-URL met een tag (geen branch, geen `github:`-afkorting),
+zodat in `package.json` leesbaar staat waar het vandaan komt en welke versie:
 
 ```bash
 npm install "git+https://github.com/motrac-innovation-lab/Motrac-DS-connector.git#v1.0.0"
 ```
 
-In een npm-workspaces-monorepo: in de map van de backend (`-w backend`). Controleer
-daarna dat `package-lock.json` een `git+https://…#<sha>` bevat.
+In een npm-workspaces-monorepo: in de map van de backend (`-w backend`). In
+`package-lock.json` staat daarna `"resolved": "git+ssh://git@github.com/…#<sha>"`.
+Dat is normaal (npm schrijft GitHub-adressen zo weg) en geen SSH-eis: npm haalt een
+GitHub-afhankelijkheid via https op, ook bij `npm ci`. De SHA is de pin.
 
 **CI.** Zet vóór elke `npm ci` die deze afhankelijkheid nodig heeft (tests én
 deploy, ook in een `workflow_call`):
