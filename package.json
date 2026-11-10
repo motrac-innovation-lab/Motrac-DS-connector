@@ -35,7 +35,7 @@
     "README.md"
   ],
   "scripts": {
-    "test": "node --test \"test/**/*.test.js\"",
+    "test": "node --test test/*.test.js",
     "types": "rm -rf types && tsc -p tsconfig.json",
     "check:types": "npm run types && git diff --exit-code -- types"
   },
